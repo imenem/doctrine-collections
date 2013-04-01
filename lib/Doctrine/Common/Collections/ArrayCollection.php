@@ -287,6 +287,59 @@ class ArrayCollection implements Collection, Selectable
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function reduce(Closure $callback, $initial = null)
+    {
+        return array_reduce($this->_elements, $callback, $initial);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unique($sort_flags = null)
+    {
+        return new static(array_unique($this->_elements, $sort_flags));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function indexBy(Closure $func)
+    {
+        $result = array();
+
+        foreach ($this->_elements as $element)
+        {
+            $result[$func($element)] = $element;
+        }
+
+        return new static($result);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function groupBy(Closure $callback)
+    {
+        $result = new static;
+
+        foreach ($this->_elements as $item)
+        {
+            $key = $callback($item);
+
+            if (!$result->offsetExists($key))
+            {
+                $result[$key] = new static;
+            }
+
+            $result[$key]->add($item);
+        }
+
+        return $result;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function filter(Closure $p)

@@ -223,6 +223,55 @@ interface Collection extends Countable, IteratorAggregate, ArrayAccess
     function map(Closure $func);
 
     /**
+     * Iteratively reduce the collection to a single value using a callback function.
+     *
+     * @param       Closure     $func
+     * @param       mixed       $initial        If the optional initial is available,
+     *                                          it will be used at the beginning of the process,
+     *                                          or as a final result in case the array is empty
+     *
+     * @return      mixed
+     */
+    function reduce(Closure $callback, $initial = null);
+
+    /**
+     * Removes duplicate values from a collection.
+     *
+     * The optional second parameter sort_flags may be used to modify the sorting behavior using these values:
+     * Sorting type flags:
+     * - SORT_REGULAR - compare items normally (don't change types)
+     * - SORT_NUMERIC - compare items numerically
+     * - SORT_STRING - compare items as strings
+     * - SORT_LOCALE_STRING - compare items as strings, based on the current locale.
+     *
+     * @param       int             $sort_flags         Sorting type flags.
+     * @return      Collection                          A new collection without duplicate values.
+     */
+    function unique($sort_flags = SORT_REGULAR);
+
+    /**
+     * Collect a collection into collections, indexed by the result of a callback.
+     * Calback result must be a scalar.
+     * Useful, for example, for indexing records by their id.
+     *
+     * @param       Closure         $callback
+     *
+     * @return      Collection
+     */
+    function indexBy(Closure $func);
+
+    /**
+     * Collect a collection into collections, grouped by the result of a callback.
+     * Calback result must be a scalar.
+     * Useful, for example, for grouping records by date.
+     *
+     * @param       Closure         $callback
+     *
+     * @return      Collection
+     */
+    function groupBy(Closure $callback);
+
+    /**
      * Partitions this collection in two collections according to a predicate.
      * Keys are preserved in the resulting collections.
      *
